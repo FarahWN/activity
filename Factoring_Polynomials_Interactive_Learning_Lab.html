@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factoring Polynomials Interactive Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse-subtle { animation: pulseSubtle 2s infinite; }
+        @keyframes pulseSubtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100 min-h-full flex flex-col antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="border-b border-indigo-900/50 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-300 via-white to-violet-300 bg-clip-text text-transparent">AlgebraQuest: Factoring Lab</h1>
+                    <p class="text-xs text-indigo-300/80 font-medium">Elementary Algebra Masterclass</p>
+                </div>
+            </div>
+
+            <!-- Global Score & Streak Badge -->
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-950/80 border border-indigo-800/60 rounded-xl px-4 py-2 flex items-center gap-3 shadow-inner">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-xs uppercase tracking-wider text-indigo-300 font-bold">Score:</span>
+                        <span id="global-score" class="text-lg font-black text-emerald-400">0</span>
+                    </div>
+                    <div class="h-4 w-px bg-indigo-800/60"></div>
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
+                        <span class="text-xs uppercase tracking-wider text-indigo-300 font-bold">Streak:</span>
+                        <span id="global-streak" class="text-lg font-black text-amber-400">0</span>
+                    </div>
+                </div>
+                <button onclick="switchView('dashboard')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    Modes
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8 flex flex-col">
+
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard" class="fade-in space-y-8 flex-1 flex flex-col justify-center">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="inline-block bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Interactive Practice Center</span>
+                <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white">Master Factoring Polynomials</h2>
+                <p class="text-slate-300 text-sm md:text-base">Choose an interactive training mode below to sharpen your algebraic skills through GCF matching, polynomial categorization, or guided multi-step puzzles.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-full">
+                <!-- Mode A Card -->
+                <div onclick="startMode('A')" class="group cursor-pointer bg-slate-900/60 hover:bg-slate-900 border border-indigo-900/60 hover:border-indigo-500/50 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/25 transition-all"></div>
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-black text-xl">A</div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyan-300 transition">GCF & Identification</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Quick-fire matching! Identify greatest common factors and basic factored forms of polynomial expressions under time-free, stress-free practice.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-cyan-400">
+                        <span>5 Challenges per round</span>
+                        <span class="group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">Start Mode &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Mode B Card -->
+                <div onclick="startMode('B')" class="group cursor-pointer bg-slate-900/60 hover:bg-slate-900 border border-indigo-900/60 hover:border-violet-500/50 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/10 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-violet-500/10 rounded-full blur-2xl group-hover:bg-violet-500/25 transition-all"></div>
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-violet-500/20 border border-violet-500/40 flex items-center justify-center text-violet-400 font-black text-xl">B</div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-violet-300 transition">Polynomial Sorting</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Categorize expressions into Difference of Squares, Perfect Square Trinomials, General Quadratics, or Prime Polynomials.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-violet-400">
+                        <span>Classification Sorting</span>
+                        <span class="group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">Start Mode &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Mode C Card -->
+                <div onclick="startMode('C')" class="group cursor-pointer bg-slate-900/60 hover:bg-slate-900 border border-indigo-900/60 hover:border-emerald-500/50 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/25 transition-all"></div>
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-xl">C</div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-emerald-300 transition">Step-by-Step Puzzle</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Guided multi-step problem solving! Pick the correct next logical factoring step to break down complex expressions completely.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-emerald-400">
+                        <span>Multi-step Puzzles</span>
+                        <span class="group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">Start Mode &rarr;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAMEPLAY VIEWS -->
+        <!-- MODE A: GCF & Basic Identification -->
+        <div id="view-mode-A" class="fade-in hidden flex-1 flex flex-col max-w-3xl mx-auto w-full space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-cyan-400 font-bold">Mode A: Quick-Fire Matching</span>
+                    <h3 id="mode-a-title" class="text-2xl font-black text-white">Identify the Factored Form</h3>
+                </div>
+                <div id="mode-a-progress" class="text-xs font-bold text-slate-400 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">Question 1 of 5</div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-slate-900/90 border border-indigo-900/80 rounded-2xl p-6 md:p-8 shadow-2xl relative">
+                <div class="text-center space-y-4 py-6">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Given Polynomial Expression:</p>
+                    <div id="mode-a-expression" class="text-3xl md:text-4xl font-black text-cyan-300 font-mono tracking-wide bg-slate-950/60 border border-cyan-500/30 rounded-xl py-4 px-6 inline-block shadow-inner">
+                        6x² + 9x
+                    </div>
+                    <p id="mode-a-prompt" class="text-sm text-slate-300 pt-2 font-medium">Select the correct factored equivalent:</p>
+                </div>
+
+                <!-- Options Grid -->
+                <div id="mode-a-options" class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                    <!-- Dynamic Option Buttons -->
+                </div>
+
+                <!-- Feedback & Explanation Box -->
+                <div id="mode-a-feedback" class="hidden mt-6 p-4 rounded-xl border text-sm transition-all">
+                    <!-- Dynamic Feedback Content -->
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="useHint('A')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Get Hint
+                </button>
+                <button id="mode-a-next-btn" onclick="nextQuestion('A')" class="hidden bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20 text-xs uppercase tracking-wider">
+                    Next Question &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- MODE B: Polynomial Sorting Challenge -->
+        <div id="view-mode-B" class="fade-in hidden flex-1 flex flex-col max-w-4xl mx-auto w-full space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-violet-400 font-bold">Mode B: Classification Challenge</span>
+                    <h3 class="text-2xl font-black text-white">Sort the Polynomial by Factoring Type</h3>
+                </div>
+                <div id="mode-b-progress" class="text-xs font-bold text-slate-400 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">Item 1 of 6</div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-indigo-900/80 rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+                <!-- Active Expression to Sort -->
+                <div class="text-center space-y-3 py-4 bg-slate-950/50 rounded-2xl border border-violet-500/30">
+                    <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Categorize this expression:</span>
+                    <div id="mode-b-expression" class="text-3xl md:text-4xl font-black text-violet-300 font-mono tracking-wide">
+                        x² - 25
+                    </div>
+                </div>
+
+                <!-- Category Drop Targets / Buttons -->
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 text-center">Select the correct factoring category:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button onclick="submitCategory('Difference of Squares')" class="group p-5 bg-slate-950 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/60 rounded-xl transition text-left space-y-1">
+                        <div class="text-sm font-bold text-white group-hover:text-violet-300 flex items-center justify-between">
+                            <span>Difference of Squares</span>
+                            <span class="text-violet-400 text-xs">&rarr; (a-b)(a+b)</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Two squared terms separated by a minus sign.</p>
+                    </button>
+
+                    <button onclick="submitCategory('Perfect Square Trinomial')" class="group p-5 bg-slate-950 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/60 rounded-xl transition text-left space-y-1">
+                        <div class="text-sm font-bold text-white group-hover:text-violet-300 flex items-center justify-between">
+                            <span>Perfect Square Trinomial</span>
+                            <span class="text-violet-400 text-xs">&rarr; (a±b)²</span>
+                        </div>
+                        <p class="text-xs text-slate-400">First and last terms are squares; middle is 2ab.</p>
+                    </button>
+
+                    <button onclick="submitCategory('General Quadratic')" class="group p-5 bg-slate-950 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/60 rounded-xl transition text-left space-y-1">
+                        <div class="text-sm font-bold text-white group-hover:text-violet-300 flex items-center justify-between">
+                            <span>General Quadratic</span>
+                            <span class="text-violet-400 text-xs">&rarr; x² + bx + c</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Trinomials factored by finding numbers adding to b and multiplying to c.</p>
+                    </button>
+
+                    <button onclick="submitCategory('Prime Polynomial')" class="group p-5 bg-slate-950 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/60 rounded-xl transition text-left space-y-1">
+                        <div class="text-sm font-bold text-white group-hover:text-violet-300 flex items-center justify-between">
+                            <span>Prime Polynomial</span>
+                            <span class="text-violet-400 text-xs">&rarr; Unfactorable</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Cannot be factored using integer coefficients.</p>
+                    </button>
+                </div>
+
+                <!-- Feedback Box -->
+                <div id="mode-b-feedback" class="hidden p-4 rounded-xl border text-sm transition-all"></div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="useHint('B')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Get Hint
+                </button>
+                <button id="mode-b-next-btn" onclick="nextQuestion('B')" class="hidden bg-violet-500 hover:bg-violet-400 text-white font-bold px-6 py-2.5 rounded-xl transition shadow-lg shadow-violet-500/20 text-xs uppercase tracking-wider">
+                    Next Item &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- MODE C: Step-by-Step Factoring Puzzle -->
+        <div id="view-mode-C" class="fade-in hidden flex-1 flex flex-col max-w-3xl mx-auto w-full space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-emerald-400 font-bold">Mode C: Multi-Step Guided Puzzle</span>
+                    <h3 id="mode-c-puzzle-title" class="text-2xl font-black text-white">Solve the Complete Factorization</h3>
+                </div>
+                <div id="mode-c-progress" class="text-xs font-bold text-slate-400 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">Puzzle 1 of 4</div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-indigo-900/80 rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+                <!-- Expression & Step Tracker -->
+                <div class="flex flex-col sm:flex-row items-center justify-between bg-slate-950/60 p-4 rounded-xl border border-emerald-500/30 gap-4">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block">Original Expression:</span>
+                        <span id="mode-c-expression" class="text-2xl font-black text-emerald-300 font-mono">2x³ - 8x</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block">Current Objective:</span>
+                        <span id="mode-c-objective" class="text-xs font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30 inline-block mt-1">Step 1: Factor out GCF</span>
+                    </div>
+                </div>
+
+                <!-- Question / Prompt -->
+                <div class="space-y-3">
+                    <p id="mode-c-prompt" class="text-sm font-bold text-white">What is the correct next step or factored component?</p>
+                    <div id="mode-c-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Dynamic choices -->
+                    </div>
+                </div>
+
+                <!-- Feedback -->
+                <div id="mode-c-feedback" class="hidden p-4 rounded-xl border text-sm transition-all"></div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="useHint('C')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Get Hint
+                </button>
+                <button id="mode-c-next-btn" onclick="nextQuestion('C')" class="hidden bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl transition shadow-lg shadow-emerald-500/20 text-xs uppercase tracking-wider">
+                    Next Step / Puzzle &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- COMPLETION / SUMMARY VIEW -->
+        <div id="view-completion" class="fade-in hidden flex-1 flex flex-col items-center justify-center max-w-xl mx-auto text-center space-y-6 py-12">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center shadow-2xl shadow-emerald-500/40 text-white text-3xl font-black">
+                🎉
+            </div>
+            <div class="space-y-2">
+                <span class="text-xs uppercase tracking-widest text-emerald-400 font-bold">Activity Complete!</span>
+                <h3 class="text-3xl font-black text-white">Outstanding Performance!</h3>
+                <p id="completion-summary-text" class="text-slate-300 text-sm">You successfully mastered this factoring session with precision and speed.</p>
+            </div>
+
+            <div class="bg-slate-900 border border-indigo-900 rounded-2xl p-6 w-full grid grid-cols-2 gap-4">
+                <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                    <span class="text-xs text-slate-400 font-semibold block uppercase">Final Score</span>
+                    <span id="final-score" class="text-2xl font-black text-emerald-400">150</span>
+                </div>
+                <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                    <span class="text-xs text-slate-400 font-semibold block uppercase">Max Streak</span>
+                    <span id="final-streak" class="text-2xl font-black text-amber-400">5</span>
+                </div>
+            </div>
+
+            <div class="flex gap-4 w-full pt-4">
+                <button onclick="switchView('dashboard')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition border border-slate-700 text-xs uppercase tracking-wider">
+                    Choose Another Mode
+                </button>
+                <button onclick="restartCurrentMode()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg shadow-indigo-600/30 text-xs uppercase tracking-wider">
+                    Play Again
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-indigo-900/50 py-4 text-center text-xs text-slate-500">
+        AlgebraQuest Factoring Lab &bull; Designed for Elementary Algebra & Classroom Mastery
+    </footer>
+
+    <!-- JavaScript Game Logic -->
+    <script>
+        // Global State
+        let currentMode = 'dashboard';
+        let score = 0;
+        let streak = 0;
+        let maxStreak = 0;
+        let activeIndex = 0;
+
+        // Mode A Data: GCF & Basic Identification
+        const modeAQuestions = [
+            {
+                expression: "6x² + 9x",
+                prompt: "Select the completely factored form using the GCF:",
+                options: [
+                    { text: "3x(2x + 3)", correct: true, explanation: "Correct! The GCF of 6x² and 9x is 3x. Factoring 3x out leaves (2x + 3)." },
+                    { text: "3(2x² + 3x)", correct: false, explanation: "Incorrect. While 3 is a common factor, the variable x is also common to both terms. The GCF is 3x." },
+                    { text: "x(6x + 9)", correct: false, explanation: "Incorrect. 6 and 9 also share a common numerical factor of 3. We must factor out the complete GCF (3x)." },
+                    { text: "9x(x + 1)", correct: false, explanation: "Incorrect. Check your distribution: 9x(x + 1) = 9x² + 9x, which does not match the original 6x²." }
+                ],
+                hint: "Look for both the largest number that divides 6 and 9, and the lowest power of x in both terms."
+            },
+            {
+                expression: "x² - 16",
+                prompt: "Select the factored form (Difference of Squares):",
+                options: [
+                    { text: "(x - 4)(x + 4)", correct: true, explanation: "Correct! a² - b² = (a - b)(a + b). Here a = x and b = 4." },
+                    { text: "(x - 8)(x + 2)", correct: false, explanation: "Incorrect. FOIL this out: x² + 2x - 8x - 16 = x² - 6x - 16, which has an unwanted middle term." },
+                    { text: "(x - 4)²", correct: false, explanation: "Incorrect. (x - 4)² expands to x² - 8x + 16, which is a perfect square trinomial, not a difference of squares." },
+                    { text: "Prime (Cannot be factored)", correct: false, explanation: "Incorrect. A difference of squares can always be factored into conjugate binomial pairs." }
+                ],
+                hint: "Remember the formula: a² - b² = (a - b)(a + b)."
+            },
+            {
+                expression: "x² + 7x + 12",
+                prompt: "Select the factored form of the quadratic trinomial:",
+                options: [
+                    { text: "(x + 3)(x + 4)", correct: true, explanation: "Correct! 3 and 4 multiply to 12 and add up to 7." },
+                    { text: "(x + 2)(x + 6)", correct: false, explanation: "Incorrect. 2 and 6 multiply to 12, but they add up to 8, not 7." },
+                    { text: "(x - 3)(x - 4)", correct: false, explanation: "Incorrect. (x - 3)(x - 4) expands to x² - 7x + 12." },
+                    { text: "(x + 1)(x + 12)", correct: false, explanation: "Incorrect. 1 and 12 add up to 13, not 7." }
+                ],
+                hint: "Find two numbers that multiply to 12 and add up to 7."
+            },
+            {
+                expression: "5x³ - 20x",
+                prompt: "Factor completely:",
+                options: [
+                    { text: "5x(x - 2)(x + 2)", correct: true, explanation: "Correct! First factor out 5x to get 5x(x² - 4), then factor the difference of squares into (x - 2)(x + 2)." },
+                    { text: "5x(x² - 4)", correct: false, explanation: "Almost! But (x² - 4) is a difference of squares and can be factored further." },
+                    { text: "(5x² - 10)(x + 2)", correct: false, explanation: "Incorrect. Multiplying this out does not yield 5x³ - 20x." },
+                    { text: "5(x³ - 4x)", correct: false, explanation: "Incorrect. You missed the common variable factor x that can also be factored out." }
+                ],
+                hint: "Always factor out the GCF first, then check if parentheses can be factored further!"
+            },
+            {
+                expression: "x² - 10x + 25",
+                prompt: "Select the factored form (Perfect Square Trinomial):",
+                options: [
+                    { text: "(x - 5)²", correct: true, explanation: "Correct! First term is x², last term is 5², and middle term is 2(x)(-5) = -10x." },
+                    { text: "(x - 25)(x - 1)", correct: false, explanation: "Incorrect. FOIL gives x² - 26x + 25." },
+                    { text: "(x + 5)(x - 5)", correct: false, explanation: "Incorrect. This equals x² - 25 (difference of squares)." },
+                    { text: "(x - 10)²", correct: false, explanation: "Incorrect. This expands to x² - 20x + 100." }
+                ],
+                hint: "Check if the first and last terms are squares and if the middle term is twice their product."
+            }
+        ];
+
+        // Mode B Data: Polynomial Sorting Challenge
+        const modeBQuestions = [
+            { expression: "x² - 49", type: "Difference of Squares", hint: "x² and 49 are perfect squares separated by minus." },
+            { expression: "x² + 6x + 9", type: "Perfect Square Trinomial", hint: "x² and 3² with middle term 2(x)(3) = 6x." },
+            { expression: "x² - 5x + 6", type: "General Quadratic", hint: "Leading coefficient is 1; find numbers multiplying to 6 and adding to -5." },
+            { expression: "x² + 2x + 5", type: "Prime Polynomial", hint: "Try finding numbers multiplying to 5 and adding to 2... none exist using integers!" },
+            { expression: "4x² - 9", type: "Difference of Squares", hint: "(2x)² - 3²." },
+            { expression: "x² - 11x + 24", type: "General Quadratic", hint: "Trinomial with leading coefficient 1." }
+        ];
+
+        // Mode C Data: Multi-Step Puzzles
+        const modeCQuestions = [
+            {
+                expression: "2x³ - 8x",
+                objective: "Step 1: Factor out the GCF",
+                prompt: "What is the very first step when factoring 2x³ - 8x?",
+                options: [
+                    { text: "Factor out 2x to get 2x(x² - 4)", correct: true, explanation: "Correct! Pulling out the GCF 2x simplifies the remaining expression inside parentheses." },
+                    { text: "Factor as (2x³ - 8)(x)", correct: false, explanation: "Incorrect. GCF must divide both numerical coefficients and variable powers." },
+                    { text: "Factor directly into (2x - 4)(x² + 2)", correct: false, explanation: "Incorrect. Always extract the GCF as your absolute first step." }
+                ],
+                hint: "Look for the greatest common divisor of coefficients (2 and 8) and powers of x."
+            },
+            {
+                expression: "2x(x² - 4)",
+                objective: "Step 2: Factor completely",
+                prompt: "Now examine the binomial (x² - 4) inside the parentheses. How does it factor?",
+                options: [
+                    { text: "(x - 2)(x + 2)", correct: true, explanation: "Correct! x² - 4 is a difference of squares and factors into (x - 2)(x + 2)." },
+                    { text: "(x - 4)(x + 1)", correct: false, explanation: "Incorrect. That would expand to x² - 3x - 4." },
+                    { text: "It cannot be factored further (Prime)", correct: false, explanation: "Incorrect. Difference of squares can always be factored." }
+                ],
+                hint: "Recognize x² as a square and 4 as 2²."
+            },
+            {
+                expression: "3x² + 15x + 18",
+                objective: "Step 1: GCF Extraction",
+                prompt: "What is the GCF of 3x² + 15x + 18?",
+                options: [
+                    { text: "3", correct: true, explanation: "Correct! 3 is common to 3, 15, and 18. Factoring 3 gives 3(x² + 5x + 6)." },
+                    { text: "3x", correct: false, explanation: "Incorrect. The constant term 18 does not contain an x, so x cannot be part of the GCF." },
+                    { text: "No GCF", correct: false, explanation: "Incorrect. All coefficients are divisible by 3." }
+                ],
+                hint: "Check the numerical coefficients: 3, 15, and 18 are all multiples of 3."
+            },
+            {
+                expression: "3(x² + 5x + 6)",
+                objective: "Step 2: Factor the Trinomial",
+                prompt: "How does the trinomial (x² + 5x + 6) factor?",
+                options: [
+                    { text: "(x + 2)(x + 3)", correct: true, explanation: "Correct! 2 and 3 multiply to 6 and add up to 5. Fully factored form: 3(x + 2)(x + 3)." },
+                    { text: "(x + 1)(x + 5)", correct: false, explanation: "Incorrect. 1 and 5 multiply to 5, not 6." },
+                    { text: "(x - 2)(x - 3)", correct: false, explanation: "Incorrect. This gives a middle term of -5x." }
+                ],
+                hint: "Find two numbers whose product is 6 and sum is 5."
+            }
+        ];
+
+        // Navigation & View Controller
+        function switchView(viewName) {
+            currentMode = viewName;
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-mode-A').classList.add('hidden');
+            document.getElementById('view-mode-B').classList.add('hidden');
+            document.getElementById('view-mode-C').classList.add('hidden');
+            document.getElementById('view-completion').classList.add('hidden');
+
+            if (viewName === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+            } else if (viewName === 'A') {
+                document.getElementById('view-mode-A').classList.remove('hidden');
+                initModeA();
+            } else if (viewName === 'B') {
+                document.getElementById('view-mode-B').classList.remove('hidden');
+                initModeB();
+            } else if (viewName === 'C') {
+                document.getElementById('view-mode-C').classList.remove('hidden');
+                initModeC();
+            } else if (viewName === 'completion') {
+                document.getElementById('view-completion').classList.remove('hidden');
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('final-streak').textContent = maxStreak;
+            }
+        }
+
+        function restartCurrentMode() {
+            startMode(currentMode);
+        }
+
+        function startMode(mode) {
+            activeIndex = 0;
+            switchView(mode);
+        }
+
+        function updateGlobalStats() {
+            document.getElementById('global-score').textContent = score;
+            document.getElementById('global-streak').textContent = streak;
+            if (streak > maxStreak) maxStreak = streak;
+        }
+
+        // --- MODE A LOGIC ---
+        function initModeA() {
+            activeIndex = 0;
+            loadModeAQuestion();
+        }
+
+        function loadModeAQuestion() {
+            if (activeIndex >= modeAQuestions.length) {
+                switchView('completion');
+                return;
+            }
+            const q = modeAQuestions[activeIndex];
+            document.getElementById('mode-a-progress').textContent = `Question ${activeIndex + 1} of ${modeAQuestions.length}`;
+            document.getElementById('mode-a-expression').textContent = q.expression;
+            document.getElementById('mode-a-prompt').textContent = q.prompt;
+            document.getElementById('mode-a-feedback').classList.add('hidden');
+            document.getElementById('mode-a-next-btn').classList.add('hidden');
+
+            const container = document.getElementById('mode-a-options');
+            container.innerHTML = '';
+
+            // Shuffle options for randomized interactivity
+            let shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            shuffled.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 bg-slate-950 hover:bg-indigo-950/40 border border-slate-800 hover:border-cyan-500/50 rounded-xl font-mono text-lg font-bold text-slate-200 transition text-left flex items-center justify-between group";
+                btn.innerHTML = `<span>${opt.text}</span><span class="text-xs font-sans text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</span>`;
+                btn.onclick = () => checkModeAAnswer(opt, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkModeAAnswer(selectedOption, btnElement) {
+            const q = modeAQuestions[activeIndex];
+            const feedbackBox = document.getElementById('mode-a-feedback');
+            feedbackBox.classList.remove('hidden');
+
+            // Disable all option buttons
+            const buttons = document.getElementById('mode-a-options').querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selectedOption.correct) {
+                btnElement.className = "p-4 bg-emerald-950/60 border border-emerald-500 rounded-xl font-mono text-lg font-bold text-emerald-200 transition text-left flex items-center justify-between shadow-lg shadow-emerald-500/10";
+                feedbackBox.className = "mt-6 p-4 rounded-xl border bg-emerald-950/40 border-emerald-500/50 text-emerald-200 text-sm";
+                feedbackBox.innerHTML = `<strong>Correct!</strong> ${selectedOption.explanation}`;
+                score += 20;
+                streak += 1;
+            } else {
+                btnElement.className = "p-4 bg-rose-950/60 border border-rose-500 rounded-xl font-mono text-lg font-bold text-rose-200 transition text-left flex items-center justify-between";
+                feedbackBox.className = "mt-6 p-4 rounded-xl border bg-rose-950/40 border-rose-500/50 text-rose-200 text-sm";
+                feedbackBox.innerHTML = `<strong>Incorrect.</strong> ${selectedOption.explanation}`;
+                streak = 0;
+            }
+            updateGlobalStats();
+            document.getElementById('mode-a-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion(mode) {
+            activeIndex++;
+            if (mode === 'A') loadModeAQuestion();
+            if (mode === 'B') loadModeBQuestion();
+            if (mode === 'C') loadModeCQuestion();
+        }
+
+        function useHint(mode) {
+            let hintText = "";
+            if (mode === 'A') hintText = modeAQuestions[activeIndex].hint;
+            if (mode === 'B') hintText = modeBQuestions[activeIndex].hint;
+            if (mode === 'C') hintText = modeCQuestions[activeIndex].hint;
+
+            // Display custom modal/toast or inline feedback
+            alertUserNotice("Hint: " + hintText);
+        }
+
+        // --- MODE B LOGIC ---
+        function initModeB() {
+            activeIndex = 0;
+            loadModeBQuestion();
+        }
+
+        function loadModeBQuestion() {
+            if (activeIndex >= modeBQuestions.length) {
+                switchView('completion');
+                return;
+            }
+            const q = modeBQuestions[activeIndex];
+            document.getElementById('mode-b-progress').textContent = `Item ${activeIndex + 1} of ${modeBQuestions.length}`;
+            document.getElementById('mode-b-expression').textContent = q.expression;
+            document.getElementById('mode-b-feedback').classList.add('hidden');
+            document.getElementById('mode-b-next-btn').classList.add('hidden');
+        }
+
+        function submitCategory(chosenCategory) {
+            const q = modeBQuestions[activeIndex];
+            const feedbackBox = document.getElementById('mode-b-feedback');
+            feedbackBox.classList.remove('hidden');
+
+            const isCorrect = (chosenCategory === q.type);
+            if (isCorrect) {
+                feedbackBox.className = "p-4 rounded-xl border bg-emerald-950/40 border-emerald-500/50 text-emerald-200 text-sm";
+                feedbackBox.innerHTML = `<strong>Spot on!</strong> This expression is indeed a <strong>${q.type}</strong>.`;
+                score += 20;
+                streak += 1;
+            } else {
+                feedbackBox.className = "p-4 rounded-xl border bg-rose-950/40 border-rose-500/50 text-rose-200 text-sm";
+                feedbackBox.innerHTML = `<strong>Not quite.</strong> This expression is actually classified as a <strong>${q.type}</strong>.`;
+                streak = 0;
+            }
+            updateGlobalStats();
+            document.getElementById('mode-b-next-btn').classList.remove('hidden');
+        }
+
+        // --- MODE C LOGIC ---
+        function initModeC() {
+            activeIndex = 0;
+            loadModeCQuestion();
+        }
+
+        function loadModeCQuestion() {
+            if (activeIndex >= modeCQuestions.length) {
+                switchView('completion');
+                return;
+            }
+            const q = modeCQuestions[activeIndex];
+            document.getElementById('mode-c-progress').textContent = `Puzzle ${activeIndex + 1} of ${modeCQuestions.length}`;
+            document.getElementById('mode-c-expression').textContent = q.expression;
+            document.getElementById('mode-c-objective').textContent = q.objective;
+            document.getElementById('mode-c-prompt').textContent = q.prompt;
+            document.getElementById('mode-c-feedback').classList.add('hidden');
+            document.getElementById('mode-c-next-btn').classList.add('hidden');
+
+            const container = document.getElementById('mode-c-options');
+            container.innerHTML = '';
+
+            let shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            shuffled.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 bg-slate-950 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 rounded-xl font-mono text-base font-bold text-slate-200 transition text-left flex items-center justify-between group";
+                btn.innerHTML = `<span>${opt.text}</span><span class="text-xs font-sans text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</span>`;
+                btn.onclick = () => checkModeCAnswer(opt, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkModeCAnswer(selectedOption, btnElement) {
+            const q = modeCQuestions[activeIndex];
+            const feedbackBox = document.getElementById('mode-c-feedback');
+            feedbackBox.classList.remove('hidden');
+
+            const buttons = document.getElementById('mode-c-options').querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selectedOption.correct) {
+                btnElement.className = "p-4 bg-emerald-950/60 border border-emerald-500 rounded-xl font-mono text-base font-bold text-emerald-200 transition text-left flex items-center justify-between shadow-lg shadow-emerald-500/10";
+                feedbackBox.className = "mt-6 p-4 rounded-xl border bg-emerald-950/40 border-emerald-500/50 text-emerald-200 text-sm";
+                feedbackBox.innerHTML = `<strong>Brilliant!</strong> ${selectedOption.explanation}`;
+                score += 25;
+                streak += 1;
+            } else {
+                btnElement.className = "p-4 bg-rose-950/60 border border-rose-500 rounded-xl font-mono text-base font-bold text-rose-200 transition text-left flex items-center justify-between";
+                feedbackBox.className = "mt-6 p-4 rounded-xl border bg-rose-950/40 border-rose-500/50 text-rose-200 text-sm";
+                feedbackBox.innerHTML = `<strong>Incorrect.</strong> ${selectedOption.explanation}`;
+                streak = 0;
+            }
+            updateGlobalStats();
+            document.getElementById('mode-c-next-btn').classList.remove('hidden');
+        }
+
+        // Custom non-alert notice handler
+        function alertUserNotice(message) {
+            // Create temporary floating notification badge
+            const existing = document.getElementById('custom-toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'custom-toast';
+            toast.className = 'fixed bottom-6 right-6 z-50 bg-amber-500 text-slate-950 font-bold px-5 py-3 rounded-xl shadow-2xl border border-amber-300 fade-in flex items-center gap-3';
+            toast.innerHTML = `<span>💡 ${message}</span>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
